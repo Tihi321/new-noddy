@@ -1,0 +1,16 @@
+node_modules
+out
+dist
+*.log
+.claude/temp/
+*.blend1
+*.blend@
+# render and audio outputs
+/render/
+/renders/
+*.exr
+*.avi
+tests/fixtures/**/out/
+
+# Godot editor/import cache
+godot/preview/.godot/

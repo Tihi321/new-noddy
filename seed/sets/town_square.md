@@ -1,0 +1,34 @@
+---
+id: town_square
+name: Town Square
+size: [12, 8]
+ground: cobble
+backdrop: sky_day
+lighting: day
+props:
+  - { kind: clock_tower, pos: [0, 3.4], rot: 0, scale: 1.0, color: "#d98b5f", accent: "#2f6db5", variant: 0, id: clock_tower }
+  - { kind: shop, pos: [3.6, 2.6], rot: 0, scale: 1.0, color: "#7fc8e8", accent: "#e85d5d", variant: 0, id: thimbles_shop }
+  - { kind: house, pos: [-3.8, 2.7], rot: 0, scale: 1.0, color: "#e8b04a", accent: "#c0392b", variant: 0, id: yellow_house }
+  - { kind: well, pos: [-1.9, 1.2], rot: 0, scale: 1.0, color: "#b9a98f", accent: "#c0392b", variant: 0, id: town_well }
+  - { kind: lamp_post, pos: [-5.2, -0.6], rot: 0, scale: 1.0, color: "#2c2c34", accent: "#ffd27a", variant: 0, id: lamp_left }
+  - { kind: lamp_post, pos: [5.4, -0.4], rot: 0, scale: 1.0, color: "#2c2c34", accent: "#ffd27a", variant: 0, id: lamp_right }
+  - { kind: bench, pos: [-4.6, 0.5], rot: 0, scale: 1.0, color: "#b8793c", accent: "#3b3b44", variant: 0, id: bench }
+  - { kind: tree_lollipop, pos: [-5.6, 1.0], rot: 0, scale: 1.1, color: "#5db24a", accent: "#ff7ab0", variant: 0, id: tree_left }
+  - { kind: tree_lollipop, pos: [5.9, 0.9], rot: 0, scale: 1.0, color: "#6cc04f", accent: "#ffd400", variant: 1, id: tree_right }
+  - { kind: flower_patch, pos: [1.9, 1.3], rot: 0, scale: 1.2, color: "#ff6b9a", accent: "#ffd400", variant: 0, id: flowers_a }
+  - { kind: flower_patch, pos: [-0.2, 1.9], rot: 0, scale: 1.0, color: "#7ab8ff", accent: "#ffffff", variant: 1, id: flowers_b }
+  - { kind: mailbox, pos: [2.2, -1.9], rot: 0, scale: 1.0, color: "#d33b2c", accent: "#ffd400", variant: 0, id: mailbox }
+  - { kind: cloud, pos: [-4.0, 6.0], rot: 0, scale: 1.3, color: "#ffffff", accent: "#e8f0ff", variant: 0, id: cloud_a }
+  - { kind: cloud, pos: [3.5, 6.0], rot: 0, scale: 1.0, color: "#ffffff", accent: "#e8f0ff", variant: 1, id: cloud_b }
+marks:
+  center: [0, 0]
+  left: [-4, -0.2]
+  right: [4, -0.2]
+  shop_door: [3.6, 1.35]
+  house_door: [-3.8, 1.5]
+  clock_tower: [0, 2.6]
+  well: [-1.9, 0.4]
+  bench: [-4.6, -0.1]
+  mailbox: [2.2, -1.3]
+---
+The heart of Tumbletown: a round cobbled square with a tall clock tower at the back, Granny Thimble's blue shop on the right, and a cosy yellow house on the left. A well, a bench, a red mailbox and two lamp posts dot the square. The middle of the square (`center`) is open and sunny, which makes it the best place for big meetings, races, and surprises. The shop door (`shop_door`) faces the camera, so characters stepping out are easy to see. Mood: bright, busy, friendly.

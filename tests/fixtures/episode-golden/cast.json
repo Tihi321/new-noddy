@@ -1,0 +1,61 @@
+[
+ {
+  "id": "tock",
+  "name": "Tock",
+  "body": "peg",
+  "material": "wood",
+  "height": 1.0,
+  "colors": {
+   "skin": "#f2c9a0",
+   "torso": "#d33b2c",
+   "legs": "#2a4fa8",
+   "hat": "#d22222",
+   "accent": "#ffd400"
+  },
+  "hat": "pompom",
+  "accessories": [
+   "key_back"
+  ],
+  "eyes": "dot",
+  "nose": "round",
+  "ears": "none",
+  "vehicle": {
+   "kind": "van",
+   "color": "#ffd400",
+   "accent": "#d33b2c"
+  },
+  "voice": {
+   "pitch": 1.2,
+   "speed": 1.1,
+   "timbre": "bright"
+  }
+ },
+ {
+  "id": "bobbin",
+  "name": "Bobbin",
+  "body": "teddy",
+  "material": "felt",
+  "height": 0.95,
+  "colors": {
+   "skin": "#c98a52",
+   "torso": "#4aa3d8",
+   "legs": "#7a4fa8",
+   "hat": "#ff8ab8",
+   "accent": "#ffd2e0"
+  },
+  "hat": "none",
+  "accessories": [
+   "apron",
+   "bow"
+  ],
+  "eyes": "button",
+  "nose": "snout",
+  "ears": "round",
+  "vehicle": null,
+  "voice": {
+   "pitch": 1.25,
+   "speed": 1.0,
+   "timbre": "warm"
+  }
+ }
+]
