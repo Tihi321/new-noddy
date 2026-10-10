@@ -65,6 +65,7 @@ export const ROLE_DEFAULTS: Record<string, string> = {
 }
 
 export const MODELS: ModelSummary[] = [
+  { ref: 'strata/qwen3.8-flash-next', provider: 'strata', model: 'qwen3.8-flash-next', family: 'qwen', local: true, enabled: true },
   { ref: QWEN35, provider: 'lmstudio', model: 'nail-qwen3.6-35b-a3b-mtp', family: 'qwen', local: true, enabled: true },
   { ref: QWEN27, provider: 'lmstudio', model: 'ista-daslab-qwen3.8-27b-gsq-rco-unsloth-mtp', family: 'qwen', local: true, enabled: true },
   { ref: 'lmstudio/gemma-4-12b', provider: 'lmstudio', model: 'gemma-4-12b', family: 'gemma', local: true, enabled: true },

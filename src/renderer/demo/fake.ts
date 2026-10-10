@@ -256,7 +256,7 @@ export class FakeEngine implements ToyboxApi, HostApi {
     const jobId = `j${String(++this.jobSeq).padStart(4, '0')}`
     const label = o.unit ? `${o.task} ${o.unit}` : o.task
     const model = a.resolvedModel ?? undefined
-    const local = !!model && model.startsWith('lmstudio/')
+    const local = !!model && (model.startsWith('lmstudio/') || model.startsWith('strata/'))
     const started = Date.now()
     this.current.set(agent, { task: label, episode: o.episode, jobId })
     if (o.from) this.emit({ type: 'handover', from: o.from, to: agent, label, jobId })

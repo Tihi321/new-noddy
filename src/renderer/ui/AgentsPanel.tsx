@@ -3,7 +3,7 @@ import { useToy } from '../store/hooks'
 import { STATE_ICON, STATE_LABEL, isLocalModel, roleColor, roomLabel, shortModel, type AgentView } from '../store/model'
 import { toyStore } from '../store/store'
 
-/** Model dropdown grouped Local (LM Studio) and API. The empty value clears the agent's own override. */
+/** Model dropdown grouped Local and API. The empty value clears the agent's own override. */
 export function ModelPicker({ agent }: { agent: AgentView }) {
   const models = useToy((s) => s.models)
   const roleDefaults = useToy((s) => s.roleDefaults)
@@ -21,7 +21,7 @@ export function ModelPicker({ agent }: { agent: AgentView }) {
         aria-label={`Model for ${agent.name}`}
       >
         <option value="">Role default{roleDefault ? `: ${shortModel(roleDefault)}` : ''}</option>
-        <optgroup label="Local (LM Studio)">
+        <optgroup label="Local">
           {local.map((m) => (
             <option key={m.ref} value={m.ref} disabled={!m.enabled}>
               {m.model}
@@ -124,7 +124,7 @@ export function AgentsPanel() {
         <span className="chip local">{localCount} local</span>
         <span className="chip api">{apiCount} API</span>
       </div>
-      <p className="hint">Pick a model for each crew member. Local models run on LM Studio and are free; API models cost money and count against the budget. Tool crews run programs and need no model.</p>
+      <p className="hint">Pick a model for each crew member. Local models run on LM Studio or Strata and are free; API models cost money and count against the budget. Tool crews run programs and need no model.</p>
       <table className="crew-table">
         <thead>
           <tr>
