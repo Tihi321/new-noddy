@@ -24,7 +24,7 @@ Usage:
   --once            Create the data folder from the seed and exit
   --heartbeat <ms>  Heartbeat interval. Default 3000
   probe             List the providers and models that are reachable; with --model, stream one short reply
-  doctor            Check Node, Blender, Godot, ffmpeg and LM Studio (prints a table, exit code 0)
+  doctor            Check Node, Blender, Godot, ffmpeg, LM Studio and Strata (prints a table, exit code 0)
   run-episode       Create an episode (or, with --episode <id>, carry on an existing one) and run the engine until it is done or failed
                     (exit code 0 when done, 1 when failed). Stage timings go to stderr and to episodes/<id>/timings.json.
   reset-seed        Overwrite the data folder's copies of the seed files (all of seed/, or only the listed folders: config, agents,

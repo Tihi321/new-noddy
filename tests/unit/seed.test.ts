@@ -26,7 +26,7 @@ describe('seed', () => {
     const r = parseMdWith(await readFile(path.join(seedDir, 'config', 'roles.md'), 'utf8'), rolesSchema).data
     expect(Object.keys(r.roles).sort()).toEqual([...LLM_ROLES].sort())
     expect(r.roles.producer!.models[0]).toBe('anthropic/claude-sonnet-5-5')
-    expect(r.roles.director!.models[0]).toBe('lmstudio/nail-qwen3.6-35b-a3b-mtp')
+    expect(r.roles.director!.models[0]).toBe('strata/qwen3.8-flash-next')
   })
 
   it('the 16 crew files are valid, cover every role once and sit in a known room', async () => {

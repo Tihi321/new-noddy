@@ -136,6 +136,20 @@ export async function runDoctor(deps: DoctorDeps = {}): Promise<DoctorRow[]> {
     rows.push({ check: 'lm-studio', status: 'MISSING', detail: 'localhost:1234 not reachable (start the LM Studio server)' })
   }
 
+  // Strata is optional (a fast local server the user starts), so it is never MISSING.
+  const startHint = 'optional: start D:\\Strata\\run-iq3_s.bat'
+  try {
+    const res = await f('http://127.0.0.1:8080/health', { signal: AbortSignal.timeout(3000) })
+    if (!res.ok) rows.push({ check: 'strata', status: 'WARN', detail: `127.0.0.1:8080 answered HTTP ${res.status} (${startHint})` })
+    else {
+      const json = (await res.json()) as { loaded?: boolean; model?: string; max_context?: number }
+      if (json.loaded) rows.push({ check: 'strata', status: 'OK', detail: `127.0.0.1:8080 loaded, ${json.model ?? 'model'}, context ${json.max_context ?? '?'}` })
+      else rows.push({ check: 'strata', status: 'WARN', detail: `127.0.0.1:8080 is up but the model is still loading (${startHint})` })
+    }
+  } catch {
+    rows.push({ check: 'strata', status: 'WARN', detail: `127.0.0.1:8080 not reachable (${startHint})` })
+  }
+
   const key = (deps.env ?? process.env).ANTHROPIC_API_KEY ? true : !!resolveKey('ANTHROPIC_API_KEY')
   rows.push({ check: 'anthropic-key', status: key ? 'OK' : 'WARN', detail: key ? 'ANTHROPIC_API_KEY is set' : 'ANTHROPIC_API_KEY not set (npm run key:set ANTHROPIC_API_KEY); local models still work' })
   return rows

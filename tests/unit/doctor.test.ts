@@ -41,6 +41,31 @@ describe('doctor', () => {
     expect(lm.detail).toContain('1 chat model')
   })
 
+  it('strata: WARN when unreachable (never MISSING), OK when /health says loaded', async () => {
+    const down = await runDoctor({
+      detect: missingTools,
+      fetchImpl: (async () => {
+        throw new Error('ECONNREFUSED')
+      }) as unknown as typeof fetch,
+      env: {}
+    })
+    expect(down.find((r) => r.check === 'strata')).toMatchObject({ status: 'WARN' })
+    expect(down.find((r) => r.check === 'strata')?.detail).toContain('run-iq3_s.bat')
+    const up = await runDoctor({
+      detect: missingTools,
+      fetchImpl: (async (url: string) =>
+        url.includes(':8080/health')
+          ? new Response(JSON.stringify({ loaded: true, model: 'qwen3.8-flash-next-iq3_s', max_context: 131072 }), { status: 200 })
+          : new Response(JSON.stringify({ data: [{ id: 'qwen' }] }), { status: 200 })) as unknown as typeof fetch,
+      env: {}
+    })
+    expect(up.find((r) => r.check === 'strata')).toMatchObject({ status: 'OK' })
+    expect(up.find((r) => r.check === 'strata')?.detail).toContain('context 131072')
+    expect(up.find((r) => r.check === 'lm-studio')?.status).toBe('OK')
+    const loading = await runDoctor({ detect: missingTools, fetchImpl: (async () => new Response(JSON.stringify({ loaded: false }), { status: 200 })) as unknown as typeof fetch, env: {} })
+    expect(loading.find((r) => r.check === 'strata')?.status).toBe('WARN')
+  })
+
   it('warns about an old Node version', async () => {
     const rows = await runDoctor({ detect: missingTools, nodeVersion: '20.1.0', fetchImpl: (async () => new Response('{}', { status: 500 })) as unknown as typeof fetch, env: {} })
     expect(rows[0]).toMatchObject({ check: 'node', status: 'WARN' })

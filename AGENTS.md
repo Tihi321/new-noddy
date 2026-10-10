@@ -1,6 +1,6 @@
 # Toybox Studio
 
-A desktop app (Electron) where a crew of AI agents writes and produces a ~5 minute kids' episode in the look of old stop-motion puppet shows. The user types a theme and watches the crew work. `docs/design.md` is the source of truth for architecture and decisions; the ticket plan is `.claude/tickets/NOD-01-toybox-studio-multi-agent-kids-episode/plan.md`.
+A desktop app (Electron) where a crew of AI agents writes and produces a ~5 minute kids' episode in the look of old stop-motion puppet shows. The user types a theme and watches the crew work. `docs/design.md` is the source of truth for architecture and decisions; the ticket plan is `.Codex/tickets/NOD-01-toybox-studio-multi-agent-kids-episode/plan.md`.
 
 ## Rules
 
@@ -12,7 +12,7 @@ A desktop app (Electron) where a crew of AI agents writes and produces a ~5 minu
 - Tool crews (Blender, Godot, ffmpeg, audio DSP) are tool jobs: no model, child processes, progress through `ctx.progress()`.
 - The animation compiler's sampled tracks are the single source of truth for both Godot and Blender.
 - Original cast and world only (Tumbletown). No existing characters or IP.
-- Temporary, scratch and intermediate files go under `.claude/temp/` (git-ignored). Durable ticket notes go in `.claude/tickets/<ticket>/`.
+- Temporary, scratch and intermediate files go under `.Codex/temp/` (git-ignored). Durable ticket notes go in `.Codex/tickets/<ticket>/`.
 
 ## Layout
 

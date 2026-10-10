@@ -51,6 +51,10 @@ describe('seed configs', () => {
     const qwen = registry.getModel('lmstudio/nail-qwen3.6-35b-a3b-mtp')!
     expect(isPaidModel(qwen)).toBe(false)
     expect(qwen.extraBody).toEqual({ reasoning_effort: 'none' })
+    expect(registry.providers.get('strata')).toMatchObject({ available: true, local: true, jsonSchema: false })
+    expect(isPaidModel(registry.getModel('strata/qwen3.8-flash-next')!)).toBe(false)
+    expect(isPaidModel(registry.getModel('strata/qwen3.8-flash-next-low')!)).toBe(false)
+    expect(new ModelRouter(registry, undefined).candidates('director')[0]?.ref).toBe('strata/qwen3.8-flash-next')
     for (const refs of Object.values(registry.roles.roles)) for (const ref of refs.models) expect(registry.getModel(ref), ref).toBeTruthy()
     expect(Object.keys(registry.roles.roles)).toHaveLength(10)
   })
@@ -224,6 +228,24 @@ describe('HTTP clients against fake servers', () => {
     expect(r.usage).toEqual({ inputTokens: 100, cachedInputTokens: 60, outputTokens: 7 })
     expect(lastBody).toMatchObject({ model: 'm', stream: true, stream_options: { include_usage: true }, thinking: false, max_tokens: 50 })
     expect(lastHeaders.authorization).toBe('Bearer sk-test')
+  })
+
+  it('OpenAI-compatible: sends the JSON schema as response_format unless jsonSchema is false; reasoning_content is not text', async () => {
+    handler = (_u, res) =>
+      sse(res, [
+        'data: {"choices":[{"delta":{"reasoning_content":"hmm"}}]}\n\n',
+        'data: {"choices":[{"delta":{"content":"{}"}}]}\n\n',
+        'data: [DONE]\n\n'
+      ])
+    const schema = { type: 'object' }
+    const messages = [{ role: 'user' as const, content: 'hi' }]
+    const on = new OpenAiCompatClient({ id: 'x', baseUrl: base + '/v1' })
+    await collect(on.chat({ model: 'm', messages, schema }))
+    expect(lastBody.response_format).toMatchObject({ type: 'json_schema', json_schema: { schema } })
+    const off = new OpenAiCompatClient({ id: 'x', baseUrl: base + '/v1', jsonSchema: false })
+    const r = await collect(off.chat({ model: 'm', messages, schema }))
+    expect(lastBody).not.toHaveProperty('response_format')
+    expect(r.text).toBe('{}')
   })
 
   it('OpenAI-compatible: 429 becomes a retryable error, 400 does not; embeddings and model list work', async () => {

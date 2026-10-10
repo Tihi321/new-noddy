@@ -206,7 +206,7 @@ export function isLocalModel(ref: string | null | undefined, models: ModelSummar
   if (!ref) return false
   const m = models.find((x) => x.ref === ref)
   if (m) return m.local
-  return ['lmstudio', 'ollama'].includes(providerOf(ref))
+  return ['lmstudio', 'strata', 'ollama'].includes(providerOf(ref))
 }
 
 export function isActiveStatus(e: EpisodeSummary): boolean {

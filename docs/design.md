@@ -11,7 +11,7 @@ A crew of AI agents turns a theme into a finished ~5 minute kids' episode (15 to
 | 3 | All state is markdown or JSON in the data folder (`~/ToyboxStudio`, `--data`, `TOYBOX_DATA`). Seed defaults are copied from `seed/` and never overwrite existing files. Config is hot-reloaded. |
 | 4 | Original cast and world (Tumbletown). No existing IP. |
 | 5 | Blender renders the final video (Eevee, the machine has no NVIDIA GPU). Godot 4 makes a fast animatic preview. |
-| 6 | Per-agent model choice: role defaults in `config/roles.md`, per-agent override in `agents/<id>.md`, editable in the UI. Creative roles default to Claude Sonnet with a local Qwen fallback, structured roles default to the local Qwen 35B with a Claude fallback. |
+| 6 | Per-agent model choice: role defaults in `config/roles.md`, per-agent override in `agents/<id>.md`, editable in the UI. Creative roles default to Claude Sonnet with a local Qwen fallback, structured roles default to Strata with the local Qwen 35B and then Claude as fallbacks. Strata (local Qwen3.8-Flash-Next) is the first local model, then LM Studio. |
 | 7 | LLM agents output zod-validated JSON and choose from fixed vocabularies. Deterministic code (animation compiler, audio DSP, Blender toykit) does everything else. |
 | 8 | Pure planner `advance(EpisodeState) -> { patch, jobs }`, so a restart is safe. Job ids are deterministic (`episode--task--unit--round`), so enqueue is idempotent. |
 | 9 | Tool crews (Blender, Godot, ffmpeg, audio) are tool jobs: agents of `kind: tool`, no model, child processes, progress as `render.progress` events. |
@@ -19,10 +19,11 @@ A crew of AI agents turns a theme into a finished ~5 minute kids' episode (15 to
 | 11 | Keys only from environment variables or the Windows credential store, never in files. |
 | 12 | Approval checkpoints (script, animatic) are optional per episode. `requestChanges` enqueues a rewrite job with the user's note. |
 | 13 | The renderer reads media through the sandboxed `toybox-media:` protocol, which serves only certain file types from inside the data folder. |
+| 14 | Strata is a local OpenAI-compatible server (`127.0.0.1:8080`) that the user starts (`D:\Strata\run-iq3_s.bat`), Toybox only connects to it. Provider `strata` has `json_schema: false`, so no `response_format` is sent: Strata fails a bad structured answer with a 502, which would be retried and fall through to paid Claude, while `chatJson` already parses and repairs. IQ3_S takes about 84 GB, so unload the big LM Studio models, and Blender/Godot renders share the iGPU memory. `npm run doctor` checks `/health`. |
 
 ## Engine
 
-- `models/`: `OpenAiCompatClient` (LM Studio, Ollama, OpenAI, OpenRouter), Anthropic, Gemini, a scripted mock, `ModelRegistry` (reads `config/providers.md` and `roles.md`, discovers LM Studio models), `ModelRouter` (retries, fallback, budget reservations), `ProviderLimiter` (concurrency, rpm), `keys.ts` (env first, then the credential store, service `toybox-studio`).
+- `models/`: `OpenAiCompatClient` (LM Studio, Strata, Ollama, OpenAI, OpenRouter), Anthropic, Gemini, a scripted mock, `ModelRegistry` (reads `config/providers.md` and `roles.md`, discovers LM Studio models), `ModelRouter` (retries, fallback, budget reservations), `ProviderLimiter` (concurrency, rpm), `keys.ts` (env first, then the credential store, service `toybox-studio`).
 - `pipeline/llm.ts`: `chatJson(ctx, messages, zodSchema)` (JSON schema to the provider, one repair retry, retry without schema), `stripThinking`, `extractJson`, `cleanProse`. `pipeline/prompts.ts`: `buildMessages` from `prompts/<role>/<task>.md` plus `prompts/_rules.md` plus the agent persona, `{{var}}` templates, and a prompt-version hash stored on the job.
 - `queue/jobs.ts`: one markdown file per job, moved between `jobs/{queued,running,done,failed}`. `queue/scheduler.ts`: picks agents by role, handles locks, `depends_on`, `waiting_on` (suspend), retries with backoff, budget caps, pause and stop. Handlers are registered with `scheduler.register(task, handler, { tool?, template?, reviewing? })`. `JobContext` offers `chat()`, `log()`, `enqueue()`, `progress()`, `emit()`.
 - `tools/`: `detect.ts` finds Blender, Godot, ffmpeg (config path, PATH, install folders) and reads their versions. `exec.ts` runs a child process and streams its lines (for tool jobs).
@@ -62,3 +63,4 @@ M1 scaffold and toolchain, M2 engine core port, M3 story agents and `advance()`,
 ## History
 
 - 2026-10-09: scaffold and engine core ported from scriptorium (M1, M2). Agent file `kind` is now `llm` or `tool` (scriptorium used `kind: agent`). Pause-all is persisted in `config/pipeline.md`.
+- 2026-10-10: Strata added as a local provider (port of scriptorium SCP-03). New provider flag `json_schema`, `strata` entries in `providers.md` and `roles.md`, a `strata` row in `npm run doctor`.
