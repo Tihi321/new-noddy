@@ -78,7 +78,7 @@ Facts carried over from SCP-03 and checked again just now:
 
 ## Implementation status
 
-Sections 1 to 7 done (uncommitted). Verification step 4 (short headless run) and the changelog are left to the user.
+Sections 1 to 7 done and all verification steps run (uncommitted). Changelog: `changelog.md` in this folder.
 
 - [x] 1. `json_schema` flag: `src/shared/schemas.ts`, `src/engine/models/registry.ts`, `src/engine/models/openaiCompat.ts`.
 - [x] 2. `seed/config/providers.md`: `strata` entry, `json_schema` field note, "Strata" section (Claude Sonnet as paid fallback, Blender/Godot iGPU memory note).
@@ -96,3 +96,5 @@ Verification:
 - `npm run engine -- probe --model strata/qwen3.8-flash-next` and `...-low` (`--data .claude/temp/strata-data`): both streamed a reply, 0 USD (local).
 
 Deviations: the ModelRouter candidates assertion uses `candidates('director')` (the scriptorium one used `line-editor`). The `src/renderer/office` badge change from scriptorium has no equivalent here. Old scratch data folders keep their old config (`reset-seed --only config --data <dir>` refreshes one).
+- Step 4 (orchestrator): `npm run engine -- run-episode --data .claude/temp/strata-data --theme "Pip learns to share the red wagon" --length 2 --approve-all`, with `anthropic` and `lmstudio` set `enabled: false` in that scratch folder only, so no paid calls and no hidden fallback. It ran brief to qa in 575 s and was stopped at `assets` (Blender). Result: 38 jobs done, 0 failed, 36 model calls all on `strata/qwen3.8-flash-next` at 0 USD, no 502 and no fallback. The `qa` stage was a tool job, so the `-low` variant was only exercised by the probe.
+- Follow-up after review: the `npm run doctor` line in the Commands sections of `CLAUDE.md` and `AGENTS.md` now mentions Strata.
